@@ -15,8 +15,8 @@ node main.ts
 
 `main.ts` assembles the one-sentence entry from its clauses (pass 1),
 validates the bounty gate — 1 sentence, 1–200 characters, no apology or
-confession words — then writes it to `output/entry.txt` and verifies it by
-reading it back (pass 2).
+confession words — then writes it to `/output/entry.txt` (the harness
+sandbox's writable path) and verifies it by reading it back (pass 2).
 
 ## Entry
 

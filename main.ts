@@ -1,10 +1,10 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const OUT = join(__dirname, "output", "entry.txt");
+// The harness runs the program in a sandbox where the repository is
+// read-only and only /output is writable: the entry goes to the absolute
+// path /output/entry.txt (competition RULES), not to the repo's output/.
+const OUT = "/output/entry.txt";
 
 // Forbidden gate words (case-insensitive): apologies + confessions.
 const FORBIDDEN = [
@@ -37,12 +37,12 @@ for (const w of FORBIDDEN) {
   }
 }
 
-mkdirSync(dirname(OUT), { recursive: true });
-writeFileSync(OUT, entry, "utf8");
+mkdirSync("/output", { recursive: true });
+writeFileSync(OUT, entry + "\n", "utf8");
 const back = readFileSync(OUT, "utf8");
-if (back !== entry) {
+if (back !== entry + "\n") {
   throw new Error("read-back mismatch");
 }
-const sha = createHash("sha256").update(back, "utf8").digest("hex");
+const sha = createHash("sha256").update(entry, "utf8").digest("hex");
 console.log(`chars=${entry.length} sha256=${sha}`);
 console.log(entry);
